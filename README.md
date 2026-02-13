@@ -8,4 +8,8 @@ of running it inside docker that I could later wrap in Nix expression for convie
   
 ...and here it is!
 
+## How it works?
+This repo contains dockerfile that builds ubuntu-based container.
+During the build it runs bash scripts to install Lumerical and OpenConnect client.
+Those scripts also contains functions for connecting to VPN and starting Lumerical launcher.
 
