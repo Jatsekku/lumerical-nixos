@@ -23,6 +23,8 @@
               inherit system;
               # Allow usage of unfree packages
               config.allowUnfree = true;
+              # Apply overlays defined by flake itself
+              overlays = [ self.overlays.default ];
             };
             inherit system;
           }
@@ -30,6 +32,25 @@
 
     in
     {
+      # Provide packages
+      packages = forEachSupportedSystem (
+        { pkgs, system }:
+        let
+          # Build package
+          lumerical-dockerized-pkg = pkgs.callPackage ./nix/package.nix { };
+        in
+        {
+          # Expose package
+          lumerical-dockerized = lumerical-dockerized-pkg;
+          default = lumerical-dockerized-pkg;
+        }
+      );
+
+      # Inject packages via overlays
+      overlays.default = final: prev: {
+        inherit (self.packages.${final.system}) lumerical-dockerized;
+      };
+
       # Generate devShell for each system
       devShells = forEachSupportedSystem ({ pkgs, ... }: import ./nix/devshell.nix { inherit pkgs; });
 
