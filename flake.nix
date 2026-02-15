@@ -51,6 +51,12 @@
         inherit (self.packages.${final.system}) lumerical-dockerized;
       };
 
+      # Provide NixOs modules
+      nixosModules = {
+        lumerical-dockerized = import ./nix/module.nix;
+        default = self.nixosModules.lumerical-dockerized;
+      };
+
       # Generate devShell for each system
       devShells = forEachSupportedSystem ({ pkgs, ... }: import ./nix/devshell.nix { inherit pkgs; });
 
